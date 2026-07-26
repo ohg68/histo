@@ -2,8 +2,8 @@ FROM node:24-bookworm-slim
 
 WORKDIR /app
 
-RUN npm config set registry https://registry.npmmirror.com/ && \
-    yarn config set registry https://registry.npmmirror.com/
+RUN npm config set registry https://registry.npmjs.org/ && \
+    yarn config set registry https://registry.npmjs.org/
 
 # Copy the repository contents into the image and install all dependencies
 COPY . .
