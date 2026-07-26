@@ -22,18 +22,18 @@ Configúralas en **Railway → tu servicio → Variables**.
 
 ## 2. Volumen persistente
 
-Toonflow guarda su base de datos SQLite, los assets generados y la configuración dentro de `/app/data`. Sin un volumen, **todo se pierde en cada redeploy**.
+Toonflow escribe en runtime la **base de datos SQLite** (`db2.sqlite`) y los **archivos generados/subidos** (`oss/`). Todo lo escribible se consolida bajo `/app/data/storage`. Sin un volumen ahí, **esos datos se pierden en cada redeploy**.
 
-1. En Railway: **tu servicio → Settings → Volumes → New Volume**.
-2. Monta el volumen en:
+1. En Railway: **tu servicio → Settings → Volumes → New Volume** (o clic derecho sobre el servicio → Attach Volume).
+2. Monta el volumen en **exactamente** esta ruta:
 
    ```
-   /app/data
+   /app/data/storage
    ```
 
-Con eso persisten la base de datos (`db.sqlite`), los archivos subidos/generados y la configuración entre despliegues.
+> ⚠️ **NO montes el volumen en `/app/data`.** Esa carpeta contiene el código y los assets horneados en la imagen (`serve/app.js`, `web/`, `skills/`, `vendor/`, `models/`, …); un volumen vacío encima los **tapa** y el contenedor arranca con `Error: Cannot find module '/app/data/serve/app.js'`. Por eso los datos escribibles viven en el subdirectorio `storage/`, que sí puede montarse sin ocultar nada.
 
-> Nota: la imagen ya incluye contenido inicial en `data/` (skills, prompts de modelos, el bundle `serve/app.js`, etc.). Al montar un volumen vacío sobre `/app/data`, ese contenido inicial queda oculto por el volumen. Si observas que faltan recursos, arranca **primero sin volumen** para verificar, o copia el contenido inicial al volumen la primera vez.
+Con el volumen en `/app/data/storage` persisten la base de datos y los archivos generados entre despliegues. Los assets de solo lectura siguen viniendo de la imagen (se actualizan con cada deploy). Nota: `logs/` y `temp/` no se persisten (son regenerables).
 
 ---
 

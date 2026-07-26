@@ -60,7 +60,7 @@ export default async function startServe(randomPort: Boolean = false) {
   app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 
   // oss 静态资源
-  const ossDir = u.getPath("oss");
+  const ossDir = u.getPath(["storage", "oss"]);
   if (!fs.existsSync(ossDir)) {
     fs.mkdirSync(ossDir, { recursive: true });
   }

@@ -28,7 +28,7 @@ class OSS {
   private initPromise: Promise<void>;
 
   constructor() {
-    this.rootDir = getPath("oss");
+    this.rootDir = getPath(["storage", "oss"]);
     // 初始化时自动创建根目录
     this.initPromise = fs.mkdir(this.rootDir, { recursive: true }).then(() => {});
   }
